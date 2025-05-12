@@ -33,7 +33,8 @@ void initSeats() {
     while (count < 10) {        // Randomly book 10 seats
         int r = rand() % ROWS;
         int c = rand() % COLS;
-        if (seats[r][c] == '-') {
+        if (seats[r][c] == '-') 
+		{
             seats[r][c] = '*'; // Mark seat as booked
             count++;
         }
@@ -48,7 +49,8 @@ void displaySeats(vector< pair<int, int> > temp = vector< pair<int, int> >()) {
         for (int j = 0; j < COLS; j++) {
             bool marked = false;
             for (size_t k = 0; k < temp.size(); ++k) {
-                if (temp[k].first == i && temp[k].second == j) {
+                if (temp[k].first == i && temp[k].second == j) 
+				{
                     cout << "@"; // Temporarily suggested seat
                     marked = true;
                     break;
@@ -89,7 +91,8 @@ bool login() {
     while (tries < 3) {
         cout << "Enter 4-digit password: ";
         cin >> input;
-        if (input == PASSWORD) {
+        if (input == PASSWORD) 
+		{
             cout << "Access Granted!\n";
             return true; // Login successful
         } else {
@@ -129,12 +132,14 @@ vector< pair<int, int> > findConsecutive(int count) {
         for (int j = 0; j <= COLS - count; j++) {
             bool ok = true;
             for (int k = 0; k < count; k++) {
-                if (seats[i][j + k] != '-') {
+                if (seats[i][j + k] != '-')
+				{
                     ok = false;
                     break;
                 }
             }
-            if (ok) {
+            if (ok) 
+			{
                 vector< pair<int, int> > res;
                 for (int k = 0; k < count; k++)
                     res.push_back(make_pair(i, j + k));
@@ -146,8 +151,8 @@ vector< pair<int, int> > findConsecutive(int count) {
     if (count == 4) { // Check 2x2 block for 4 seats
         for (int i = 0; i < ROWS - 1; i++) {
             for (int j = 0; j < COLS - 1; j++) {
-                if (seats[i][j] == '-' && seats[i][j+1] == '-' &&
-                    seats[i+1][j] == '-' && seats[i+1][j+1] == '-') {
+                if (seats[i][j] == '-' && seats[i][j+1] == '-' && seats[i+1][j] == '-' && seats[i+1][j+1] == '-')
+					{
                     vector< pair<int, int> > res;
                     res.push_back(make_pair(i, j));
                     res.push_back(make_pair(i, j+1));
@@ -166,13 +171,15 @@ void optionB() {
     int count;
     cout << "How many seats do you need? (1-4): ";
     cin >> count;
-    if (count < 1 || count > 4) {
+    if (count < 1 || count > 4) 
+	{
         cout << "Invalid number.\n";
         return;
     }
 
     vector< pair<int, int> > result = findConsecutive(count);
-    if (result.empty()) {
+    if (result.empty()) 
+	{
         cout << "No suitable seats available.\n";
         return;
     }
@@ -181,7 +188,8 @@ void optionB() {
     char confirm;
     cout << "Do you accept these seats? (y/n): ";
     cin >> confirm;
-    if (confirm == 'y' || confirm == 'Y') {
+    if (confirm == 'y' || confirm == 'Y') 
+	{
         bookSeats(result);
         clearScreen();
     } else {
@@ -201,18 +209,21 @@ void optionC() {
         cout << "Enter seat (row-col): ";
         cin >> input;
 
-        if (input.find('-') == string::npos || input.size() < 3) {
+        if (input.find('-') == string::npos || input.size() < 3) 
+		{
             cout << "Invalid format!\n";
             return;
         }
 
         int row = input[0] - '1'; // Convert char to int
         int col = input[2] - '1';
-        if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
+        if (row < 0 || row >= ROWS || col < 0 || col >= COLS) 
+		{
             cout << "Out of range.\n";
             return;
         }
-        if (!isAvailable(row, col)) {
+        if (!isAvailable(row, col)) 
+		{
             cout << "Seat already taken.\n";
             return;
         }
@@ -249,7 +260,8 @@ int main() {
         cin >> choice;
         clearScreen();
 
-        if (choice == 'a' || choice == 'A') {
+        if (choice == 'a' || choice == 'A') 
+		{
             displaySeats();     // Show seat layout
             cout << "Press enter to return.\n";
             cin.ignore(); cin.get();
