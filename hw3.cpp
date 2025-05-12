@@ -1,62 +1,66 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <cstdlib>
-#include <ctime>
-#include <iomanip>
-#include <utility>
+#include <iostream>         // For input/output operations
+#include <vector>           // For using vector container
+#include <string>           // For using string class
+#include <cstdlib>          // For random functions and system calls
+#include <ctime>            // For time function to seed random
+#include <iomanip>          // For formatted output (not used directly here)
+#include <utility>          // For using pair
 
 using namespace std;
 
-const int ROWS = 9;
-const int COLS = 9;
-const string PASSWORD = "2025";
-char seats[ROWS][COLS];
+const int ROWS = 9;          // Number of rows in the seat grid
+const int COLS = 9;          // Number of columns in the seat grid
+const string PASSWORD = "2025"; // Default password for login
+char seats[ROWS][COLS];     // 2D array to store seat status
 
+// Function to clear the screen
 void clearScreen() {
 #ifdef _WIN32
-    system("cls");
+    system("cls");         // Windows command to clear screen
 #else
-    system("clear");
+    system("clear");       // Unix/Linux/Mac command to clear screen
 #endif
 }
 
+// Initialize the seat grid and randomly fill 10 seats with '*'
 void initSeats() {
     for (int i = 0; i < ROWS; i++)
         for (int j = 0; j < COLS; j++)
-            seats[i][j] = '-';
+            seats[i][j] = '-'; // Set all seats to available
 
-    srand(time(0));
+    srand(time(0));             // Seed random generator
     int count = 0;
-    while (count < 10) {
+    while (count < 10) {        // Randomly book 10 seats
         int r = rand() % ROWS;
         int c = rand() % COLS;
         if (seats[r][c] == '-') {
-            seats[r][c] = '*';
+            seats[r][c] = '*'; // Mark seat as booked
             count++;
         }
     }
 }
 
+// Display current seat layout, optionally with temporary '@' markings
 void displaySeats(vector< pair<int, int> > temp = vector< pair<int, int> >()) {
-    cout << "\\123456789\n";
+    cout << "\\123456789\n"; // Column labels
     for (int i = ROWS - 1; i >= 0; i--) {
-        cout << i + 1;
+        cout << i + 1;          // Row labels
         for (int j = 0; j < COLS; j++) {
             bool marked = false;
             for (size_t k = 0; k < temp.size(); ++k) {
                 if (temp[k].first == i && temp[k].second == j) {
-                    cout << "@";
+                    cout << "@"; // Temporarily suggested seat
                     marked = true;
                     break;
                 }
             }
-            if (!marked) cout << seats[i][j];
+            if (!marked) cout << seats[i][j]; // Show real seat status
         }
         cout << endl;
     }
 }
 
+// Login function to check password
 bool login() {
     clearScreen();
     printf("************************\n");
@@ -87,16 +91,17 @@ bool login() {
         cin >> input;
         if (input == PASSWORD) {
             cout << "Access Granted!\n";
-            return true;
+            return true; // Login successful
         } else {
             cout << "Incorrect password.\n";
             tries++;
         }
     }
     cout << "Too many failed attempts. Exiting.\n";
-    return false;
+    return false; // Login failed
 }
 
+// Show the main menu
 void showMenu() {
     cout << "----------[Booking System]----------\n";
     cout << "| a. Available seats               |\n";
@@ -107,15 +112,18 @@ void showMenu() {
     cout << "Choose option: ";
 }
 
+// Check if a seat is available
 bool isAvailable(int row, int col) {
     return seats[row][col] == '-';
 }
 
+// Mark seats as booked
 void bookSeats(vector< pair<int, int> > locations) {
     for (size_t i = 0; i < locations.size(); ++i)
         seats[locations[i].first][locations[i].second] = '*';
 }
 
+// Find consecutive available seats for automatic arrangement
 vector< pair<int, int> > findConsecutive(int count) {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j <= COLS - count; j++) {
@@ -130,12 +138,12 @@ vector< pair<int, int> > findConsecutive(int count) {
                 vector< pair<int, int> > res;
                 for (int k = 0; k < count; k++)
                     res.push_back(make_pair(i, j + k));
-                return res;
+                return res; // Return consecutive seats
             }
         }
     }
 
-    if (count == 4) {
+    if (count == 4) { // Check 2x2 block for 4 seats
         for (int i = 0; i < ROWS - 1; i++) {
             for (int j = 0; j < COLS - 1; j++) {
                 if (seats[i][j] == '-' && seats[i][j+1] == '-' &&
@@ -150,9 +158,10 @@ vector< pair<int, int> > findConsecutive(int count) {
             }
         }
     }
-    return vector< pair<int, int> >();
+    return vector< pair<int, int> >(); // Return empty if not found
 }
 
+// Handle automatic seat arrangement option
 void optionB() {
     int count;
     cout << "How many seats do you need? (1-4): ";
@@ -168,7 +177,7 @@ void optionB() {
         return;
     }
 
-    displaySeats(result);
+    displaySeats(result); // Show suggested seats
     char confirm;
     cout << "Do you accept these seats? (y/n): ";
     cin >> confirm;
@@ -180,6 +189,7 @@ void optionB() {
     }
 }
 
+// Handle manual seat selection option
 void optionC() {
     int count;
     cout << "How many seats to choose (1-4): ";
@@ -196,7 +206,7 @@ void optionC() {
             return;
         }
 
-        int row = input[0] - '1';
+        int row = input[0] - '1'; // Convert char to int
         int col = input[2] - '1';
         if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
             cout << "Out of range.\n";
@@ -209,13 +219,14 @@ void optionC() {
         chosen.push_back(make_pair(row, col));
     }
 
-    displaySeats(chosen);
+    displaySeats(chosen); // Show selected seats
     cout << "Press enter to confirm.\n";
     cin.ignore(); cin.get();
     bookSeats(chosen);
     clearScreen();
 }
 
+// Handle exit option with confirmation
 bool optionD() {
     char confirm;
     while (true) {
@@ -227,27 +238,28 @@ bool optionD() {
     }
 }
 
+// Main function
 int main() {
-    initSeats();
-    if (!login()) return 0;
+    initSeats();                 // Initialize the seat layout
+    if (!login()) return 0;     // Login check
 
     while (true) {
-        showMenu();
+        showMenu();             // Show main menu
         char choice;
         cin >> choice;
         clearScreen();
 
         if (choice == 'a' || choice == 'A') {
-            displaySeats();
+            displaySeats();     // Show seat layout
             cout << "Press enter to return.\n";
             cin.ignore(); cin.get();
             clearScreen();
         } else if (choice == 'b' || choice == 'B') {
-            optionB();
+            optionB();          // Auto arrange seats
         } else if (choice == 'c' || choice == 'C') {
-            optionC();
+            optionC();          // Manual seat selection
         } else if (choice == 'd' || choice == 'D') {
-            if (!optionD()) break;
+            if (!optionD()) break; // Exit confirmation
             clearScreen();
         } else {
             cout << "Invalid option.\n";
@@ -257,3 +269,4 @@ int main() {
     cout << "Goodbye!\n";
     return 0;
 }
+
