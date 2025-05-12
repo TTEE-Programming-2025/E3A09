@@ -59,8 +59,26 @@ void displaySeats(vector< pair<int, int> > temp = vector< pair<int, int> >()) {
 
 bool login() {
     clearScreen();
-    for (int i = 0; i < 20; ++i)
-        cout << "== Welcome to My Booking System Interface ==" << endl;
+    printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
+	printf("************************\n");
+	printf("-----------------\n");
 
     int tries = 0;
     string input;
